@@ -1,0 +1,44 @@
+{
+  "private": true,
+  "scripts": {
+    "lint": "eslint .",
+    "build": "nuxt build",
+    "dev": "nuxt dev --port=8080",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@nuxtjs/tailwindcss": "^6.2.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "^8.30.0",
+    "eslint-plugin-vue": "^9.8.0",
+    "flowbite": "^1.6.2",
+    "nuxt": "3.0.0",
+    "nuxt-icon": "^0.2.5",
+    "prisma": "^4.8.1",
+    "vite-plugin-eslint": "^1.8.1"
+  },
+  "dependencies": {
+    "@nozomuikuta/h3-cors": "^0.2.0",
+    "@pinia/nuxt": "^0.4.6",
+    "@prisma/client": "^4.8.1",
+    "@types/grecaptcha": "^3.0.4",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@vueuse/nuxt": "^9.7.0",
+    "bcrypt": "^5.1.0",
+    "dayjs": "^1.11.7",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^9.0.0",
+    "ky": "^0.33.2",
+    "nuxt-logrocket": "^2.0.4",
+    "nuxt-security": "^0.10.2",
+    "openai": "^3.1.0",
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model permissions {
+  id               Int                @id @default(autoincrement()) @db.SmallInt
+  name             String             @db.VarChar(50)
+  description      String?            @db.VarChar(100)
+  createdAt        DateTime           @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime?          @db.Timestamp(0)
+  roles_permission roles_permission[]
+}
+
+model roles {
+  id               Int                @id @default(autoincrement()) @db.SmallInt
+  name             String             @db.VarChar(50)
+  description      String?            @db.VarChar(100)
+  createdAt        DateTime?          @default(now()) @db.Timestamp(0)
+  roles_permission roles_permission[]
+  teams_member     teams_member[]
+}
+
+model roles_permission {
+  id           Int          @id @default(autoincrement()) @db.SmallInt
+  roleId       Int          @db.SmallInt
+  permissionId Int?         @db.SmallInt
+  active       Boolean?     @default(dbgenerated("(b'1')")) @db.Bit(1)
+  createdAt    DateTime?    @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime?    @db.Timestamp(0)
+  roles        roles        @relation(fields: [roleId], references: [id], onUpdate: Restrict, map: "roles_permission_ibfk_1")
+  permissions  permissions? @relation(fields: [permissionId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "roles_permission_ibfk_2")
+
+  @@index([permissionId], map: "permissionId")
+  @@index([roleId], map: "roleId")
+}
+
+model teams {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  usage        Int?           @default(0)
+  createdAt    DateTime?      @default(now()) @db.Timestamp(0)
+  teams_member teams_member[]
+  teams_usage  teams_usage[]
+}
+
+model users {
+  id           Int            @id @default(autoincrement())
+  firstName    String         @db.VarChar(100)
+  lastName     String         @db.VarChar(100)
+  email        String         @unique(map: "email") @db.VarChar(100)
+  password     String         @db.VarChar(255)
+  temp         String?        @db.VarChar(100)
+  createdAt    DateTime?      @default(now()) @db.Timestamp(0)
+  teams_member teams_member[]
+  teams_usage  teams_usage[]
+}
+
+model teams_member {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  roleId    Int       @db.SmallInt
+  teamId    Int
+  createdAt DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  deletedAt DateTime? @db.Timestamp(0)
+  users     users     @relation(fields: [userId], references: [id], onUpdate: Restrict, map: "teams_member_ibfk_1")
+  teams     teams     @relation(fields: [teamId], references: [id], onUpdate: Restrict, map: "teams_member_ibfk_5")
+  roles     roles     @relation(fields: [roleId], references: [id], onUpdate: Restrict, map: "teams_member_ibfk_6")
+
+  @@index([teamId], map: "company_id")
+  @@index([roleId], map: "role_id")
+  @@index([userId], map: "user_id")
+}
+
+model teams_usage {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  teamId    Int
+  typeId    Int?      @db.SmallInt
+  amount    Int?      @default(0)
+  balance   Int?      @default(0)
+  createdAt DateTime? @default(now()) @db.Timestamp(0)
+  users     users     @relation(fields: [userId], references: [id], onUpdate: Restrict, map: "teams_usage_ibfk_1")
+  teams     teams     @relation(fields: [teamId], references: [id], onUpdate: Restrict, map: "teams_usage_ibfk_2")
+  types     types?    @relation(fields: [typeId], references: [id], onDelete: Restrict, onUpdate: Restrict, map: "teams_usage_ibfk_3")
+
+  @@index([teamId], map: "teamId")
+  @@index([typeId], map: "typeId")
+  @@index([userId], map: "userId")
+}
+
+model types {
+  id          Int           @id @default(autoincrement()) @db.SmallInt
+  name        String        @db.VarChar(20)
+  createdAt   DateTime?     @default(now()) @db.Timestamp(0)
+  teams_usage teams_usage[]
+
+  @@index([name], map: "userId")
+}
